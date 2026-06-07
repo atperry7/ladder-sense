@@ -42,8 +42,8 @@ public class LadderSenseConfig {
 	/** Shape of the speed ramp outside the dead zone. */
 	public RampCurve rampCurve = RampCurve.SMOOTH;
 
-	/** Whether scaffolding is affected. Off by default since scaffolding already has its own fast movement. */
-	public boolean affectScaffolding = false;
+	/** Whether scaffolding is affected. On by default; scaffolding climbs with jump (up) and sneak (down). */
+	public boolean affectScaffolding = true;
 
 	// --- Accessibility ---
 

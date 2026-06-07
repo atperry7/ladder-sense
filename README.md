@@ -39,7 +39,7 @@ Anything tagged `#minecraft:climbable` works automatically, including modded cli
 - Ladders
 - Chains (iron and all copper variants) — *added by this mod*
 - Vines, cave vines, twisting vines, weeping vines
-- Scaffolding — *off by default*; enable with `affectScaffolding`. Scaffolding keeps its own controls
+- Scaffolding — *on by default*; disable with `affectScaffolding`. Scaffolding keeps its own controls
   (jump to go up, sneak to go down), and Ladder Sense scales those by your look pitch the same way.
 
 ## Configuration
@@ -56,7 +56,7 @@ Settings live in `config/ladder-sense.json`, created with defaults on first laun
 | `maxDescentMultiplier` | `4.0` | `≥ 1.0` | Top downward speed when looking nearly straight down while sliding (× the vanilla 0.15 blocks/tick slide). |
 | `deadZoneDegrees` | `15.0` | `0.0`–`89.0` | Half-width (±) of the neutral look zone where movement stays vanilla. |
 | `rampCurve` | `"SMOOTH"` | `"LINEAR"`, `"SMOOTH"`, `"AGGRESSIVE"` | How speed ramps from vanilla (at the dead-zone edge) to max (at ±90°). `LINEAR` = constant rate; `SMOOTH` = eases in and out; `AGGRESSIVE` = rises quickly then tapers. Case-sensitive. |
-| `affectScaffolding` | `false` | `true` / `false` | Whether scaffolding is affected. Off by default since scaffolding has its own movement. |
+| `affectScaffolding` | `true` | `true` / `false` | Whether scaffolding is affected (jump to climb, sneak to descend). Set `false` to leave scaffolding fully vanilla. |
 | `disableAccelerationCurves` | `false` | `true` / `false` | Accessibility: skip the ramp and jump straight to the max multiplier past the dead zone (fixed tiers). |
 | `maxVerticalSpeedCap` | `0.0` | `≥ 0.0` | Accessibility: absolute ceiling on climb speed in blocks/tick. `0` disables the cap. |
 
@@ -74,7 +74,7 @@ this back into the file:
   "maxDescentMultiplier": 4.0,
   "deadZoneDegrees": 15.0,
   "rampCurve": "SMOOTH",
-  "affectScaffolding": false,
+  "affectScaffolding": true,
   "disableAccelerationCurves": false,
   "maxVerticalSpeedCap": 0.0
 }
