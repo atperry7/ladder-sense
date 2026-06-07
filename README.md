@@ -4,19 +4,80 @@ Climbing speed that follows where you look. On any climbable surface, glance upw
 faster and look downward to descend faster. Look roughly level and movement stays exactly vanilla.
 No new blocks, controls, or progression — just more responsive vertical travel.
 
+## Features
+
+- **Look up to climb faster, look down to descend faster** — speed scales with your view pitch.
+- **Dead zone** keeps movement vanilla when you're looking roughly level, so you can pause and aim
+  on a ladder without changing speed.
+- **Clean exits** — accelerated ascent eases back to vanilla speed at the top of a climb, so you're
+  never flung off the top of a ladder.
+- **Sneak to park** still works exactly like vanilla.
+- **Chains are climbable** — Ladder Sense adds chains to the climbable set, so they work like ladders
+  (with look-driven speed too).
+- **Accessibility options** — disable the acceleration curve for fixed speed tiers, or cap the
+  maximum climb speed.
+- **Fully configurable** — tune the multipliers, dead zone, and ramp curve, or turn the mod off
+  entirely.
+
 ## How it works
 
-Ladder Sense also makes **chains climbable** (added to the vanilla `climbable` block tag), so they
-work just like ladders — with look-driven speed included.
-
-While climbing (ladders, chains, vines, cave/twisting/weeping vines, and any block tagged climbable):
+While climbing:
 
 - **Looking up** past the dead zone accelerates your ascent, up to the max ascent multiplier when
-  looking nearly straight up. Ascent only speeds up while you're actually climbing (pressing into
-  the ladder or jumping), so simply glancing up never launches you.
-- **Looking down** past the dead zone accelerates your descent, up to the max descent multiplier.
-- **Looking level** (within the dead zone) keeps vanilla speed, so you can pause without fiddling.
-- **Sneaking** still parks you on the ladder, untouched.
+  looking nearly straight up. Ascent only speeds up while you're actually climbing (holding into the
+  ladder or jumping), so simply glancing up never launches a standing player, and holding "up" always
+  climbs regardless of where you look.
+- **Looking down** past the dead zone accelerates your descent (while sliding), up to the max descent
+  multiplier when looking nearly straight down.
+- **Looking level** (within the dead zone) keeps vanilla speed.
+- **Sneaking** parks you on the ladder, untouched.
+
+### Supported blocks
+
+Anything tagged `#minecraft:climbable` works automatically, including modded climbables:
+
+- Ladders
+- Chains (iron and all copper variants) — *added by this mod*
+- Vines, cave vines, twisting vines, weeping vines
+- Scaffolding — *off by default* (it has its own movement feel); enable with `affectScaffolding`
+
+## Configuration
+
+Settings live in `config/ladder-sense.json`, created with defaults on first launch.
+
+> The config is read **once at startup**. After editing the file, restart the game (or server) for
+> changes to take effect.
+
+| Key | Default | Valid values | What it does |
+| --- | --- | --- | --- |
+| `enabled` | `true` | `true` / `false` | Master switch. `false` restores fully vanilla climbing. |
+| `maxAscentMultiplier` | `3.0` | `≥ 1.0` | Top upward speed when looking nearly straight up (× the vanilla 0.2 blocks/tick climb). |
+| `maxDescentMultiplier` | `4.0` | `≥ 1.0` | Top downward speed when looking nearly straight down while sliding (× the vanilla 0.15 blocks/tick slide). |
+| `deadZoneDegrees` | `15.0` | `0.0`–`89.0` | Half-width (±) of the neutral look zone where movement stays vanilla. |
+| `rampCurve` | `"SMOOTH"` | `"LINEAR"`, `"SMOOTH"`, `"AGGRESSIVE"` | How speed ramps from vanilla (at the dead-zone edge) to max (at ±90°). `LINEAR` = constant rate; `SMOOTH` = eases in and out; `AGGRESSIVE` = rises quickly then tapers. Case-sensitive. |
+| `affectScaffolding` | `false` | `true` / `false` | Whether scaffolding is affected. Off by default since scaffolding has its own movement. |
+| `disableAccelerationCurves` | `false` | `true` / `false` | Accessibility: skip the ramp and jump straight to the max multiplier past the dead zone (fixed tiers). |
+| `maxVerticalSpeedCap` | `0.0` | `≥ 0.0` | Accessibility: absolute ceiling on climb speed in blocks/tick. `0` disables the cap. |
+
+Values are sanitized on load, so an out-of-range edit is clamped rather than breaking movement.
+
+### Resetting to defaults
+
+Delete `config/ladder-sense.json` and it will be regenerated with defaults on next launch, or paste
+this back into the file:
+
+```json
+{
+  "enabled": true,
+  "maxAscentMultiplier": 3.0,
+  "maxDescentMultiplier": 4.0,
+  "deadZoneDegrees": 15.0,
+  "rampCurve": "SMOOTH",
+  "affectScaffolding": false,
+  "disableAccelerationCurves": false,
+  "maxVerticalSpeedCap": 0.0
+}
+```
 
 ## Installation & multiplayer
 
@@ -31,25 +92,10 @@ The mechanic runs in common (client + server) code, but Minecraft player movemen
 - **Client-only on a server** works, but a strict vanilla/anti-cheat server may rubber-band high
   multipliers since it sees the player moving faster than expected.
 
-## Configuration
+## Building
 
-Settings live in `config/ladder-sense.json`, created with defaults on first launch:
-
-| Key | Default | Meaning |
-| --- | --- | --- |
-| `enabled` | `true` | Master switch; `false` restores vanilla climbing. |
-| `maxAscentMultiplier` | `3.0` | Top upward speed multiplier when looking nearly straight up. |
-| `maxDescentMultiplier` | `4.0` | Top downward speed multiplier when looking nearly straight down. |
-| `deadZoneDegrees` | `15.0` | Pitch half-width (±) where movement stays vanilla. |
-| `rampCurve` | `SMOOTH` | How speed ramps with pitch: `LINEAR`, `SMOOTH`, or `AGGRESSIVE`. |
-| `affectScaffolding` | `false` | Whether scaffolding is affected (it has its own fast movement). |
-| `disableAccelerationCurves` | `false` | Motion comfort: jump straight to max past the dead zone (fixed tiers). |
-| `maxVerticalSpeedCap` | `0.0` | Absolute ceiling on vertical climb speed (blocks/tick); `0` disables it. |
-
-## Setup
-
-For setup instructions, see the [Fabric Documentation](https://docs.fabricmc.net/develop/getting-started/creating-a-project#setting-up)
-for your IDE. Build with `./gradlew build`; the mod jar lands in `build/libs/`.
+Build with `./gradlew build`; the mod jar lands in `build/libs/`. For development environment setup,
+see the [Fabric Documentation](https://docs.fabricmc.net/develop/getting-started/creating-a-project#setting-up).
 
 ## License
 
