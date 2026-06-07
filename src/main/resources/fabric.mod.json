@@ -1,0 +1,35 @@
+{
+	"schemaVersion": 1,
+	"id": "ladder-sense",
+	"version": "${version}",
+	"name": "Ladder Sense",
+	"description": "Climbing speed follows where you look: glance up to ascend faster, look down to descend faster, stay level for vanilla movement.",
+	"authors": [
+		"cadaewen"
+	],
+	"contact": {},
+	"license": "CC0-1.0",
+	"icon": "assets/ladder-sense/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.cadaewen.laddersense.LadderSense"
+		],
+		"client": [
+			"com.cadaewen.laddersense.client.LadderSenseClient"
+		]
+	},
+	"mixins": [
+		"ladder-sense.mixins.json",
+		{
+			"config": "ladder-sense.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~26.1.2",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
