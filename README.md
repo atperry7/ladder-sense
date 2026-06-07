@@ -6,7 +6,10 @@ No new blocks, controls, or progression — just more responsive vertical travel
 
 ## How it works
 
-While climbing (ladders, vines, cave/twisting/weeping vines, and any block tagged climbable):
+Ladder Sense also makes **chains climbable** (added to the vanilla `climbable` block tag), so they
+work just like ladders — with look-driven speed included.
+
+While climbing (ladders, chains, vines, cave/twisting/weeping vines, and any block tagged climbable):
 
 - **Looking up** past the dead zone accelerates your ascent, up to the max ascent multiplier when
   looking nearly straight up. Ascent only speeds up while you're actually climbing (pressing into
