@@ -39,7 +39,8 @@ Anything tagged `#minecraft:climbable` works automatically, including modded cli
 - Ladders
 - Chains (iron and all copper variants) — *added by this mod*
 - Vines, cave vines, twisting vines, weeping vines
-- Scaffolding — *off by default* (it has its own movement feel); enable with `affectScaffolding`
+- Scaffolding — *off by default*; enable with `affectScaffolding`. Scaffolding keeps its own controls
+  (jump to go up, sneak to go down), and Ladder Sense scales those by your look pitch the same way.
 
 ## Configuration
 

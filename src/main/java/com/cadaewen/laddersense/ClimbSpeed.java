@@ -30,9 +30,8 @@ public final class ClimbSpeed {
 	 *
 	 * @param entity     the climbing entity
 	 * @param vanillaY   the vertical velocity vanilla computed (returned unchanged when the mod stays out of the way)
-	 * @param pressingIn whether the entity is actively engaging the ladder (colliding into it or jumping). This is the
-	 *                   player's climb intent: while engaging, they always ascend (looking up speeds it). Only when
-	 *                   not engaging — i.e. sliding down — does looking down accelerate the descent.
+	 * @param pressingIn whether the entity is actively engaging the climbable (colliding into it or jumping). This is
+	 *                   the player's climb-up intent: while engaging, they always ascend (looking up speeds it).
 	 */
 	public static double adjustClimbY(LivingEntity entity, double vanillaY, boolean pressingIn) {
 		LadderSenseConfig cfg = LadderSenseConfig.get();
@@ -41,33 +40,64 @@ public final class ClimbSpeed {
 		// Only the player drives the look-to-speed mechanic; mobs keep vanilla climbing.
 		if (!(entity instanceof Player)) return vanillaY;
 
+		// Scaffolding moves differently from ladders (sneak descends instead of parking), so it has its own path.
+		if (entity.getInBlockState().is(Blocks.SCAFFOLDING)) {
+			return cfg.affectScaffolding ? adjustScaffolding(entity, vanillaY, pressingIn, cfg) : vanillaY;
+		}
+
+		return adjustLadder(entity, vanillaY, pressingIn, cfg);
+	}
+
+	/** Ladders, vines, chains, etc.: hold into them (or jump) to climb; release and slide to descend; sneak parks. */
+	private static double adjustLadder(LivingEntity entity, double vanillaY, boolean pressingIn, LadderSenseConfig cfg) {
 		// Sneaking parks the player on a ladder; honour that intent and stay vanilla.
 		if (entity.isSuppressingSlidingDownLadder()) return vanillaY;
 
-		// Scaffolding has its own movement feel; leave it alone unless the player opts in.
-		if (!cfg.affectScaffolding && entity.getInBlockState().is(Blocks.SCAFFOLDING)) return vanillaY;
-
 		float pitch = entity.getXRot(); // -90 = straight up, +90 = straight down
-		double deadZone = cfg.deadZoneDegrees;
-
 		if (pressingIn) {
-			// Climb intent: the player is holding into the ladder (or jumping), so always ascend. Holding "up" must
-			// never get blocked by looking down — that just keeps the normal vanilla climb speed.
-			if (pitch < -deadZone) {
-				double t = progress(-pitch, deadZone);
-				double speed = cap(VANILLA_ASCENT * multiplier(t, cfg.maxAscentMultiplier, cfg), cfg);
-				return taperNearTop(entity, speed);
-			}
-			return vanillaY;
+			// Climb intent: holding "up" always climbs, and never gets blocked by looking down.
+			return accelerateAscent(entity, vanillaY, pitch, cfg);
 		}
+		// Sliding: looking down accelerates the descent.
+		return accelerateDescent(vanillaY, pitch, cfg);
+	}
 
-		// Not engaging the ladder: the player is sliding. Looking down accelerates the descent.
+	/**
+	 * Scaffolding: jump (or press in) to climb up, sneak to descend — unlike ladders, where sneaking parks you.
+	 * When neither key is held the player is standing on or crossing the top, so vertical movement is left untouched.
+	 */
+	private static double adjustScaffolding(LivingEntity entity, double vanillaY, boolean pressingIn, LadderSenseConfig cfg) {
+		float pitch = entity.getXRot();
+		if (pressingIn) {
+			// Going up: looking up speeds the climb (same trigger vanilla uses for the scaffolding boost).
+			return accelerateAscent(entity, vanillaY, pitch, cfg);
+		}
+		if (entity.isSuppressingSlidingDownLadder()) {
+			// Going down: on scaffolding, sneak is the descent control, so looking down speeds it.
+			return accelerateDescent(vanillaY, pitch, cfg);
+		}
+		// Neither climbing nor descending (standing on / walking across the top): leave movement alone.
+		return vanillaY;
+	}
+
+	/** Scales upward speed by how far above the dead zone the player is looking, tapering near the top of a climb. */
+	private static double accelerateAscent(LivingEntity entity, double vanillaY, float pitch, LadderSenseConfig cfg) {
+		double deadZone = cfg.deadZoneDegrees;
+		if (pitch < -deadZone) {
+			double t = progress(-pitch, deadZone);
+			double speed = cap(VANILLA_ASCENT * multiplier(t, cfg.maxAscentMultiplier, cfg), cfg);
+			return taperNearTop(entity, speed);
+		}
+		return vanillaY;
+	}
+
+	/** Scales downward speed by how far below the dead zone the player is looking. */
+	private static double accelerateDescent(double vanillaY, float pitch, LadderSenseConfig cfg) {
+		double deadZone = cfg.deadZoneDegrees;
 		if (pitch > deadZone) {
 			double t = progress(pitch, deadZone);
 			return -cap(VANILLA_DESCENT * multiplier(t, cfg.maxDescentMultiplier, cfg), cfg);
 		}
-
-		// Within the dead zone (or looking up while idle): vanilla movement.
 		return vanillaY;
 	}
 
