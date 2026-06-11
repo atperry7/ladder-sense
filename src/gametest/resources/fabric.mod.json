@@ -1,0 +1,17 @@
+{
+	"schemaVersion": 1,
+	"id": "laddersense_gametest",
+	"version": "1.0.0",
+	"name": "Ladder Sense GameTests",
+	"description": "Game tests for Ladder Sense. Lives only in the gametest source set; never shipped in the release jar.",
+	"license": "CC0-1.0",
+	"environment": "*",
+	"entrypoints": {
+		"fabric-gametest": [
+			"com.cadaewen.laddersense.gametest.LadderSenseGameTest"
+		]
+	},
+	"depends": {
+		"ladder-sense": "*"
+	}
+}

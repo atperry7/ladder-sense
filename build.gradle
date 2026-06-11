@@ -26,6 +26,21 @@ loom {
 
 }
 
+// Game tests boot a real headless server (mixins applied) as part of `build`.
+// Must come after the loom block: configureTests finalizes loom properties that
+// splitEnvironmentSourceSets() still needs to change. modId is deliberately NOT
+// set: loom's create() would collide with the loom { mods { "ladder-sense" } }
+// block above. The test source set instead ships its own mod
+// (src/gametest/resources/fabric.mod.json) so test classes and the gametest
+// entrypoint stay out of the release jar.
+fabricApi {
+	configureTests {
+		createSourceSet = true
+		enableGameTests = true
+		eula = true
+	}
+}
+
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
