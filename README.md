@@ -82,6 +82,8 @@ this back into the file:
 
 ## Installation & multiplayer
 
+One jar covers Minecraft **26.1 – 26.1.2** (Fabric Loader ≥ 0.19.3, Fabric API, Java 25).
+
 The mechanic runs in common (client + server) code, but Minecraft player movement is
 **client-authoritative** — your client computes your own climbing and the server accepts it. So:
 
