@@ -28,10 +28,26 @@ jobs:
         run: chmod +x ./gradlew
       - name: build
         run: ./gradlew build
+      - name: extract changelog section
+        # Pull the section for this tag's version out of CHANGELOG.md so the release
+        # leads with curated notes. If the version has no entry, the file is left empty
+        # and the release falls back to the auto-generated commit list below.
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          awk -v v="$version" '
+            $0 == "## [" v "]" || index($0, "## [" v "] ") == 1 { flag=1; next }
+            /^## \[/ { flag=0 }
+            flag { print }
+          ' CHANGELOG.md | sed '/./,$!d' > RELEASE_NOTES.md
+          echo "----- release notes for $version -----"
+          cat RELEASE_NOTES.md
       - name: publish release
         uses: softprops/action-gh-release@v2
         with:
           files: build/libs/*.jar
+          # Curated changelog section first; action-gh-release appends the
+          # auto-generated commit/PR list after this body.
+          body_path: RELEASE_NOTES.md
           generate_release_notes: true
           fail_on_unmatched_files: true
           # Tags with a pre-release suffix (e.g. v1.2.0-rc.1) publish as pre-releases.
