@@ -4,6 +4,17 @@ All notable changes to Ladder Sense are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-09-16
+
+### Changed
+- **Updated to Minecraft 26.3.** A single jar now covers all of 26.3.x. The build pins to the
+  26.3 floor and the released jar declares `~26.3`, so it loads on every 26.3 patch.
+- Bumped Fabric API to `0.160.6+26.3` and Fabric Loader to `0.19.5`.
+
+### Notes
+- 26.2.x users should stay on 1.2.0; 1.3.0 targets the 26.3 series.
+- All gametests pass against the official 26.3 release on a headless server.
+
 ## [1.2.0] - 2026-06-17
 
 ### Changed
@@ -37,6 +48,7 @@ All notable changes to Ladder Sense are documented here. The format follows
   enabled by default.
 - GitHub release workflow that attaches the built jar to each tagged release.
 
+[1.3.0]: https://github.com/atperry7/ladder-sense/releases/tag/v1.3.0
 [1.2.0]: https://github.com/atperry7/ladder-sense/releases/tag/v1.2.0
 [1.1.0]: https://github.com/atperry7/ladder-sense/releases/tag/v1.1.0
 [1.0.0]: https://github.com/atperry7/ladder-sense/releases/tag/v1.0.0

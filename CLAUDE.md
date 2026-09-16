@@ -1,15 +1,15 @@
 # Ladder Sense — dev notes
 
-Fabric mod for Minecraft 26.2.x, Java 25, Loom. User-facing docs live in README.md; this file is
+Fabric mod for Minecraft 26.3.x, Java 25, Loom. User-facing docs live in README.md; this file is
 build/test conventions only.
 
 ## Versioning
 
-- The build pins `minecraft_version` to the **26.2 floor** in gradle.properties so the compiler
-  can't admit symbols that only exist in later patches; the released jar declares `~26.2` in
-  fabric.mod.json and runs on all of 26.2.x.
-- `fabric_api_version` must stay on the `+26.2` branch. Don't add a fabric-api floor in
-  fabric.mod.json above that, or 26.2 users get locked out.
+- The build pins `minecraft_version` to the **26.3 floor** in gradle.properties so the compiler
+  can't admit symbols that only exist in later patches; the released jar declares `~26.3` in
+  fabric.mod.json and runs on all of 26.3.x.
+- `fabric_api_version` must stay on the `+26.3` branch. Don't add a fabric-api floor in
+  fabric.mod.json above that, or 26.3 users get locked out.
 - Loom 1.17+ requires Gradle ≥ 9.5.0 — keep the wrapper (`gradle/wrapper/gradle-wrapper.properties`)
   in step with the `loom_version`, or configuration fails with a "No matching variant" error.
 
